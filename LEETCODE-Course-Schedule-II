@@ -1,0 +1,33 @@
+## Course Schedule II
+
+https://leetcode.com/problems/course-schedule-ii/
+
+```java
+public int[] findOrder(int numCourses, int[][] prerequisites) {
+	int[] orders = new int[numCourses];
+	int[] map = new int[numCourses];
+	ArrayList<Integer>[] outdegree = new ArrayList[numCourses];
+	int k = 0;
+	for (int[] req : prerequisites) {
+		map[req[0]]++;
+		if (outdegree[req[1]] == null) outdegree[req[1]] = new ArrayList<Integer>();
+		outdegree[req[1]].add(req[0]);
+	}
+
+	for (int i = 0; i < numCourses; i++) {
+		if (map[i] == 0) orders[k++] = i;
+	}
+	if (k == 0) return new int[]{};
+
+	int kk = 0;
+	while (kk != k) {
+		ArrayList<Integer> nextAll = outdegree[orders[kk++]];
+		if (nextAll != null) {
+			for (int next : nextAll) {
+				if (--map[next] == 0) orders[k++] = next;
+			}
+		}
+	}
+	return k == numCourses ? orders : new int[]{};
+}
+```
